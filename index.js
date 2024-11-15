@@ -101,6 +101,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         resizeCallback: textResizeCallback,
         splitTypeTypes: "words, chars",
       });
+      console.log("Characters created by SplitType:", this.splitter.getChars());
 
       // Trigger the initial scroll effect.
       this.scroll();
@@ -110,6 +111,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     scroll() {
       // Query all individual characters in the line for animation.
       const chars = this.splitter.getChars();
+      console.log("Characters for animation:", chars);
+
       gsap.fromTo(
         chars,
         {
@@ -125,6 +128,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             start: "top bottom-=15%", // Animation starts when element hits bottom of viewport.
             end: "bottom center+=15%", // Animation ends in the center of the viewport.
             scrub: true, // Animation progress tied to scroll position.
+            onEnter: () => console.log("Animation started"),
           },
         }
       );
