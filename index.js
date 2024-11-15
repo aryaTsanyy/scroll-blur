@@ -75,6 +75,11 @@ class TextSplitter {
 
 document.addEventListener("DOMContentLoaded", (event) => {
   console.log("DOM fully loaded and parsed");
+  if (gsap && ScrollTrigger) {
+    console.log("GSAP and ScrollTrigger are loaded.");
+  } else {
+    console.error("GSAP or ScrollTrigger is not available.");
+  }
   gsap.registerPlugin(ScrollTrigger);
   // gsap code here!
   class BlurScrollEffect {
@@ -84,6 +89,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
       if (!textElement || !(textElement instanceof HTMLElement)) {
         throw new Error("Invalid text element provided.");
       }
+
+      // Attempt to create a SplitType instance and check the output
+      this.splitter = new TextSplitter(textElement, {
+        resizeCallback: () => this.scroll(),
+        splitTypeTypes: "words, chars",
+      });
+      console.log("Testing SplitType:");
+      console.log(this.splitter.getChars()); // Should log characters if SplitType is working
+      this.scroll();
 
       this.textElement = textElement;
 
@@ -109,29 +123,34 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // Animates text based on the scroll position.
     scroll() {
+      console.log("Scroll function triggered");
       // Query all individual characters in the line for animation.
       const chars = this.splitter.getChars();
-      console.log("Characters for animation:", chars);
+      if (chars && chars.length) {
+        console.log("Characters for animation:", chars);
 
-      gsap.fromTo(
-        chars,
-        {
-          filter: "blur(10px) brightness(30%)",
-          willChange: "filter",
-        },
-        {
-          ease: "none", // Animation easing.
-          filter: "blur(0px) brightness(100%)",
-          stagger: 0.05, // Delay between starting animations for each character.
-          scrollTrigger: {
-            trigger: this.textElement, // Element that triggers the animation.
-            start: "top bottom-=15%", // Animation starts when element hits bottom of viewport.
-            end: "bottom center+=15%", // Animation ends in the center of the viewport.
-            scrub: true, // Animation progress tied to scroll position.
-            onEnter: () => console.log("Animation started"),
+        gsap.fromTo(
+          chars,
+          {
+            filter: "blur(10px) brightness(30%)",
+            willChange: "filter",
           },
-        }
-      );
+          {
+            ease: "none",
+            filter: "blur(0px) brightness(100%)",
+            stagger: 0.05,
+            scrollTrigger: {
+              trigger: this.textElement,
+              start: "top bottom-=15%",
+              end: "bottom center+=15%",
+              scrub: true,
+              onEnter: () => console.log("Animation started"),
+            },
+          }
+        );
+      } else {
+        console.error("No characters available for animation.");
+      }
     }
   }
   const textElement = document.querySelector("#text-blur-2");
