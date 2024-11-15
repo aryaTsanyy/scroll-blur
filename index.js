@@ -74,10 +74,12 @@ class TextSplitter {
 }
 
 document.addEventListener("DOMContentLoaded", (event) => {
+  console.log("DOM fully loaded and parsed");
   gsap.registerPlugin(ScrollTrigger);
   // gsap code here!
   class BlurScrollEffect {
     constructor(textElement) {
+      console.log("Applying BlurScrollEffect to:", textElement);
       // Check if the provided element is valid.
       if (!textElement || !(textElement instanceof HTMLElement)) {
         throw new Error("Invalid text element provided.");
