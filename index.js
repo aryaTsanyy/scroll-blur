@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       );
     }
   }
-  const textElement = document.querySelectorAll("#text-blur-2");
+  const textElement = document.querySelector("#text-blur-2");
   if (textElement) {
     new BlurScrollEffect(textElement);
   }
